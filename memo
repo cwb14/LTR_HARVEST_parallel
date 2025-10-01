@@ -1,0 +1,10 @@
+# LTRharvest args might need work, but heres a script.
+python LTR_HARVEST_parallel/LTR_HARVEST_parallel.py -seq 9311v2.fa --overlap 30000 -t 200 --sdust --trf --longdust --gene-gff 9311v2.miniprot_liftover.gff --ltrharvest-args "-minlenltr 120 -maxlenltr 7000 -mintsd 5 -maxtsd 5 -similar 75 -seed 20 -seqids yes -mindistltr 500 -vic 60 -overlaps best"
+
+# View the help menu. 
+gt ltrharvest -help
+
+# Here are my counts for each overlaps settings: no=1781; best=5208; all=17538.
+# No keeps only LTR-RTs without overlap and nesting. 
+# Best keeps only the one with the highest similarity. 
+# Vicinity=60 means its highly liklely that TSD is found by chance, so effectively disabling TSD filter.
