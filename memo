@@ -8,3 +8,30 @@ gt ltrharvest -help
 # No keeps only LTR-RTs without overlap and nesting. 
 # Best keeps only the one with the highest similarity. 
 # Vicinity=60 means its highly liklely that TSD is found by chance, so effectively disabling TSD filter.
+
+
+# This version runs LTR_finder too.
+python LTR_HARVEST_parallel/LTR_HARVEST_parallel2.py -seq 9311v2.fa --overlap 30000 -t 200 --sdust --trf --longdust --gene-gff 9311v2.fa.genic.gff --ltrharvest-args "-minlenltr 100 -maxlenltr 7000 -mintsd 4 -maxtsd 6 -similar 75 -vic 10 -seed 15 -seqids yes -overlaps all" --run-ltrfinder --ltrfinder-args "-J 0.85 -g 100 -S 5.0 -w 2 -D 15000 -d 500 -L 7000 -l 100 -p 15 -B 0.3 -b 0.3"
+
+# Creates '9311v2.fa.harvest.combine.scn'. I can cluster overlapping ones. 
+awk '{$1=$1}1' OFS='\t' 9311v2.fa.harvest.combine.scn | python LTR_HARVEST_parallel/cluster_LTRs.py - |  less
+
+# I can keep only the longest one in the cluster using 'keep_longest_LTR.py'.
+
+# I can add TSD, motif, and PPT to the scn using 'TSD_motif_adder.py'.
+# The issue here is that (1) TSDs are unreliable indicators of true positives. (2) PPT doesnt seem to great either (a) only 80% of repbase (true) LTR-RTs have PPT. (b) some PPT strands are disagreeing with TEsorter stand, suggesting there are false positives. (3) Motifs are to short and TCGA is not always. 
+
+# I can add TEsorter classifications to the SCN using 'TEsorter2.py'.
+# IMO, this seems better info than PPT, TSD, or motif. 
+
+
+######## Two options ########
+(1) annotate in passes. 
+	- classify the easiest ones, mask them.
+	- classify the next easiest, mask them.
+	- repeat. 
+
+(2) Collect LTR-RT regions and classify de-novo using kmer. 
+	- see memo and 'cluster_kmers' in LTRquest.
+
+I'm leaning towards 2.
